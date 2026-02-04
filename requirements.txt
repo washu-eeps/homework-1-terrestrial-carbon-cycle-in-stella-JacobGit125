@@ -1,0 +1,2 @@
+# Autograder dependencies
+pytest>=7.0.0
