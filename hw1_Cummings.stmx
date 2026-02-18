@@ -100,7 +100,7 @@
 				<units>Pg C/yr</units>
 			</flow>
 			<flow name="Emissions">
-				<eqn>IF Scenario = 1 THEN emissions_base ELSE IF Scenario = 2 THEN emissions_base ELSE emissions_base</eqn>
+				<eqn>IF Scenario = 1 THEN emissions_base ELSE IF Scenario = 2 THEN emissions_S2 ELSE emissions_S3</eqn>
 				<non_negative/>
 				<units>Pg C/yr</units>
 			</flow>
@@ -138,7 +138,7 @@
 				<units>Pg C/yr</units>
 			</aux>
 			<aux name="Scenario">
-				<eqn>1</eqn>
+				<eqn>3</eqn>
 				<units>dimensionless</units>
 			</aux>
 			<aux name="Total Carbon">
@@ -174,6 +174,12 @@
 			<aux name="climate sensitivity">
 				<eqn>3</eqn>
 				<units>Degrees C</units>
+			</aux>
+			<aux name="emissions S2">
+				<eqn>MAX(0,  emissions_base - (1/3)*TIME)</eqn>
+			</aux>
+			<aux name="emissions S3">
+				<eqn>emissions_base * (1.02^TIME)</eqn>
 			</aux>
 		</variables>
 		<views>
@@ -224,7 +230,7 @@
 				<isee:iframe color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid"/>
 				<isee:financial_table color="black" background="white" text_align="right" font_size="12pt" hide_border="false" auto_fit="true" first_column_width="250" other_column_width="100" header_font_style="normal" header_font_weight="bold" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="14pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
 			</style>
-			<view isee:show_pages="false" background="white" page_width="1056" page_height="816" isee:page_cols="2" isee:page_rows="2" isee:scroll_x="319.286" isee:scroll_y="77.8571" zoom="140" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
+			<view isee:show_pages="false" background="white" page_width="1056" page_height="816" isee:page_cols="2" isee:page_rows="2" zoom="80" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
 				<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
 					<stock color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
 						<shape type="rectangle" width="45" height="35"/>
@@ -314,7 +320,7 @@
 				<aux x="514.277" y="545.609" name="tau litter"/>
 				<aux x="451.828" y="312.922" name="tau som"/>
 				<aux x="677.934" y="112.766" name="emissions base"/>
-				<aux x="752.367" y="121.938" name="Scenario"/>
+				<aux x="677.934" y="244.334" name="Scenario"/>
 				<aux x="389.434" y="168.043" name="Total Carbon"/>
 				<aux x="139.434" y="298.043" name="Squared Error"/>
 				<aux x="309.434" y="168.043" name="RMSE"/>
@@ -350,7 +356,7 @@
 					<from>tau_som</from>
 					<to>Heterotrophic_Respiration</to>
 				</connector>
-				<connector uid="11" angle="216.18">
+				<connector uid="11" angle="135.56">
 					<from>Scenario</from>
 					<to>Emissions</to>
 				</connector>
@@ -395,7 +401,7 @@
 					<from>Observed_CO2</from>
 					<to>Squared_Error</to>
 				</connector>
-				<stacked_container uid="21" x="1034.2" y="166.766">
+				<stacked_container uid="21" x="1034.2" y="166.766" minimized="true">
 					<table isee:start_time="0" isee:stop_time="60" interval="60" report_balances="beginning" report_flows="instantaneous" width="350" height="250">
 						<item type="time"/>
 						<item>
@@ -435,6 +441,35 @@
 					<from>T_ref</from>
 					<to>Heterotrophic_Respiration</to>
 				</connector>
+				<aux x="616.891" y="79.4286" name="emissions S2"/>
+				<aux x="725.077" y="100.571" name="emissions S3"/>
+				<connector uid="29" angle="14.503">
+					<from>emissions_base</from>
+					<to>emissions_S3</to>
+				</connector>
+				<connector uid="30" angle="138.987">
+					<from>emissions_base</from>
+					<to>emissions_S2</to>
+				</connector>
+				<connector uid="31" angle="284.199">
+					<from>emissions_S2</from>
+					<to>Emissions</to>
+				</connector>
+				<connector uid="32" angle="279.105">
+					<from>emissions_S3</from>
+					<to>Emissions</to>
+				</connector>
+				<stacked_container uid="33" x="693" y="166.766" minimized="true">
+					<table width="350" height="250">
+						<item type="time"/>
+						<item>
+							<entity name="Emissions"/>
+						</item>
+						<item>
+							<entity name="Atmosphere"/>
+						</item>
+					</table>
+				</stacked_container>
 			</view>
 		</views>
 	</model>
