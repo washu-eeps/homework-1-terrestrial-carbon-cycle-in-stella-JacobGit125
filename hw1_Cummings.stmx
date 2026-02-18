@@ -2,7 +2,7 @@
 <xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0" xmlns:isee="http://iseesystems.com/XMILE">
 	<header>
 		<smile version="1.0" namespace="std, isee"/>
-		<name>hw1_starter</name>
+		<name>hw1_Cummings</name>
 		<uuid>4a6e158f-c160-4293-aba8-8d50fb2af75f</uuid>
 		<vendor>isee systems, inc.</vendor>
 		<product version="4.1.2" isee:build_number="3810" isee:saved_by_v1="true" lang="en">Stella Professional</product>
@@ -40,6 +40,11 @@
 			<eqn/>
 			<alias>yr</alias>
 			<alias>year</alias>
+		</unit>
+		<unit name="Degrees C">
+			<eqn/>
+			<alias>degc</alias>
+			<alias>degree C</alias>
 		</unit>
 	</model_units>
 	<model>
@@ -90,7 +95,7 @@
 				<units>Pg C/yr</units>
 			</flow>
 			<flow name="Heterotrophic Respiration">
-				<eqn>SOM / tau_som</eqn>
+				<eqn>(SOM / tau_som) * Q10^((Temperature - T_ref) / 10)</eqn>
 				<non_negative/>
 				<units>Pg C/yr</units>
 			</flow>
@@ -156,6 +161,20 @@
 					<ypts>800,848,892,932,968,1001,1031,1059,1085,1109,1132,1153,1173</ypts>
 				</gf>
 			</aux>
+			<aux name="Temperature">
+				<eqn>T_ref + climate_sensitivity * (Atmosphere - Atm_ref) / Atm_ref</eqn>
+			</aux>
+			<aux name="Q10">
+				<eqn>2.0</eqn>
+			</aux>
+			<aux name="T ref">
+				<eqn>15</eqn>
+				<units>Degrees C</units>
+			</aux>
+			<aux name="climate sensitivity">
+				<eqn>3</eqn>
+				<units>Degrees C</units>
+			</aux>
 		</variables>
 		<views>
 			<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
@@ -205,7 +224,7 @@
 				<isee:iframe color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid"/>
 				<isee:financial_table color="black" background="white" text_align="right" font_size="12pt" hide_border="false" auto_fit="true" first_column_width="250" other_column_width="100" header_font_style="normal" header_font_weight="bold" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="14pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
 			</style>
-			<view isee:show_pages="false" background="white" page_width="1056" page_height="816" isee:page_cols="2" isee:page_rows="2" isee:scroll_x="43.5714" zoom="140" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
+			<view isee:show_pages="false" background="white" page_width="1056" page_height="816" isee:page_cols="2" isee:page_rows="2" isee:scroll_x="319.286" isee:scroll_y="77.8571" zoom="140" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
 				<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
 					<stock color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
 						<shape type="rectangle" width="45" height="35"/>
@@ -384,6 +403,38 @@
 						</item>
 					</table>
 				</stacked_container>
+				<aux x="585.418" y="305.477" name="Temperature"/>
+				<aux x="469.828" y="443.703" name="Q10"/>
+				<aux x="451.828" y="244.334" name="T ref"/>
+				<aux x="756.143" y="287.477" name="climate sensitivity"/>
+				<connector uid="22" angle="335.407">
+					<from>T_ref</from>
+					<to>Temperature</to>
+				</connector>
+				<connector uid="23" angle="186.019">
+					<from>climate_sensitivity</from>
+					<to>Temperature</to>
+				</connector>
+				<connector uid="24" angle="73.033">
+					<from>Atm_ref</from>
+					<to>Temperature</to>
+				</connector>
+				<connector uid="25" angle="320.661">
+					<from>Atmosphere</from>
+					<to>Temperature</to>
+				</connector>
+				<connector uid="26" angle="186.103">
+					<from>Temperature</from>
+					<to>Heterotrophic_Respiration</to>
+				</connector>
+				<connector uid="27" angle="72.2591">
+					<from>Q10</from>
+					<to>Heterotrophic_Respiration</to>
+				</connector>
+				<connector uid="28" angle="244.528">
+					<from>T_ref</from>
+					<to>Heterotrophic_Respiration</to>
+				</connector>
 			</view>
 		</views>
 	</model>
